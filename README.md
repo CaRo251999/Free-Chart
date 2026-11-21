@@ -28,11 +28,11 @@ Solo endpoints **públicos** de exchanges, llamados desde tu navegador, sin clav
 |---|---|---|
 | Coinbase Exchange | verificado | Automático (1.º). Permite EE.UU. 4h y 1S se agregan desde 1h / 1D. |
 | Kraken | verificado | Automático (2.º). Permite EE.UU. Historial de 720 velas. |
-| Binance (`data-api.binance.vision`) | verificado | **Solo manual**. No disponible para residentes de EE.UU. |
+| Binance (`data-api.binance.vision`) | verificado | Automático (3.º, último recurso) o manual. **No disponible para residentes de EE.UU.**: la gráfica muestra un aviso cuando se usa. |
 | OKX | verificado | **Solo manual**. No disponible para residentes de EE.UU. |
 | Bybit | implementado, sin verificar en vivo | **Solo manual**. No disponible para residentes de EE.UU. (devolvió 403 desde la red de pruebas). |
 
-El modo **Automático** usa Coinbase → Kraken. Binance/OKX/Bybit solo se usan si los eliges a mano, con un aviso para residentes de EE.UU. Si un exchange falla o está bloqueado, se cambia al siguiente automáticamente. Detalles de las pruebas en [NOTES.md](NOTES.md).
+El modo **Automático** usa Coinbase → Kraken → Binance (Binance solo como último recurso, con aviso visible). OKX y Bybit solo se usan si los eliges a mano, con un aviso para residentes de EE.UU. Si un exchange falla o está bloqueado, se cambia al siguiente automáticamente. Detalles de las pruebas en [NOTES.md](NOTES.md).
 
 ## Cómo correrlo
 
@@ -95,7 +95,7 @@ MIT, ver [LICENSE](LICENSE). Usa [Lightweight Charts™](https://www.tradingview
 
 ### Data sources
 
-Public exchange endpoints only, called from your browser, no API keys, rate-limited and cached. **Automatic** mode tries Coinbase → Kraken. Binance, OKX and Bybit are **manual-only** and show a notice because they are not available to US residents. See the table above and [NOTES.md](NOTES.md).
+Public exchange endpoints only, called from your browser, no API keys, rate-limited and cached. **Automatic** mode tries Coinbase → Kraken → Binance (Binance only as a last resort, with a visible warning). OKX and Bybit are **manual-only**. Binance, OKX and Bybit are not available to US residents. See the table above and [NOTES.md](NOTES.md).
 
 ### Run it
 

@@ -108,6 +108,9 @@ export function ChartView({ pair, pref, onController, onStatus, compact, primary
         <span class={`chip ${live ? 'chip-ok' : 'chip-warn'}`}>
           {status.loading ? t('loading') : live ? t('live') : status.stream === 'reconnecting' ? t('reconnecting') : t('offline')}
         </span>
+        {status.exchange && ADAPTERS[status.exchange].usRestricted && effectivePref !== status.exchange && (
+          <span class="chip chip-warn" title={t('usAutoNotice')}>⚠ {t('usAutoNotice')}</span>
+        )}
         {status.fellBack && status.exchange && <span class="chip chip-warn">{t('fellBack', { name: ADAPTERS[status.exchange].name })}</span>}
       </div>
       <div class="chart-canvas" ref={el} />

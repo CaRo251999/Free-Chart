@@ -54,7 +54,7 @@ export function Terms() {
         <>
           <p>Free Chart se ofrece «tal cual», sin garantías de ningún tipo. Los precios y datos provienen de exchanges de terceros, pueden tener retrasos o errores y no constituyen recomendación de inversión, compra o venta.</p>
           <p>Operar criptomonedas implica un riesgo alto de pérdida. Tú eres el único responsable de tus decisiones.</p>
-          <p>Los exchanges Binance, OKX y Bybit no están disponibles para residentes de EE.UU. y, por eso, solo se usan si los eliges manualmente. Es tu responsabilidad cumplir con las leyes y los términos de cada exchange en tu país.</p>
+          <p>Binance, OKX y Bybit no están disponibles para residentes de EE.UU. OKX y Bybit solo se usan si los eliges manualmente; Binance también puede usarse como último recurso automático (la gráfica lo avisa). Es tu responsabilidad cumplir con las leyes y los términos de cada exchange en tu país.</p>
           <p>Las alertas de precio solo funcionan mientras la pestaña esté abierta.</p>
           <p>Free Chart no está afiliado ni respaldado por TradingView ni por ningún exchange.</p>
         </>
@@ -62,7 +62,7 @@ export function Terms() {
         <>
           <p>Free Chart is provided "as is", without warranties of any kind. Prices and data come from third-party exchanges, may be delayed or wrong, and are not investment advice or a recommendation to buy or sell.</p>
           <p>Trading crypto carries a high risk of loss. You alone are responsible for your decisions.</p>
-          <p>Binance, OKX and Bybit are not available to US residents, so they are only used if you pick them manually. It is your responsibility to comply with the laws and exchange terms of your country.</p>
+          <p>Binance, OKX and Bybit are not available to US residents. OKX and Bybit are only used if you pick them manually; Binance may also serve as an automatic last resort (the chart warns you). It is your responsibility to comply with the laws and exchange terms of your country.</p>
           <p>Price alerts only work while the tab is open.</p>
           <p>Free Chart is not affiliated with or endorsed by TradingView or any exchange.</p>
         </>

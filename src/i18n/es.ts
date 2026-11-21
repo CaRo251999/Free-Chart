@@ -122,6 +122,7 @@ export const es = {
   scLang: 'Cambiar idioma',
   pickPair: 'Elegir par',
   currentPrice: 'Precio actual',
+  usAutoNotice: 'Datos de Binance como último recurso: no disponible para residentes de EE.UU.',
   barsText: '{n} velas',
   textPrompt: 'Texto:',
   // Extras

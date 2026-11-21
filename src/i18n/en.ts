@@ -121,6 +121,7 @@ export const en: Dict = {
   scLang: 'Change language',
   pickPair: 'Choose pair',
   currentPrice: 'Current price',
+  usAutoNotice: 'Data from Binance as a last resort: not available to US residents.',
   barsText: '{n} bars',
   textPrompt: 'Text:',
   layout: 'Layout',

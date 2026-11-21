@@ -8,12 +8,13 @@ import { bybit } from './bybit';
 export const ADAPTERS: Record<ExchangeId, ExchangeAdapter> = { coinbase, kraken, binance, okx, bybit };
 
 /**
- * Order used by "automatic" mode. Exchanges that do not serve US residents
- * (Binance, OKX, Bybit) are never used automatically: only on manual choice.
+ * Order used by "automatic" mode: Coinbase -> Kraken -> Binance. Binance is only a last resort
+ * (it is not available to US residents; the UI warns when it ends up serving a pair).
+ * OKX and Bybit are never used automatically.
  */
-export const AUTO_ORDER: ExchangeId[] = ['coinbase', 'kraken'];
+export const AUTO_ORDER: ExchangeId[] = ['coinbase', 'kraken', 'binance'];
 
-export const MANUAL_ONLY: ExchangeId[] = ['binance', 'okx', 'bybit'];
+export const MANUAL_ONLY: ExchangeId[] = ['okx', 'bybit'];
 
 export const ALL_IDS = Object.keys(ADAPTERS) as ExchangeId[];
 

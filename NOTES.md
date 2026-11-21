@@ -16,8 +16,8 @@ REST con cabecera `Origin: http://localhost:5173`; WebSocket abierto con `WebSoc
 Limitación: solo puedo comprobar el comportamiento desde mi ubicación; el geobloqueo desde EE.UU. se
 documenta según los términos de cada exchange y se cubre con el respaldo automático.
 
-Orden automático (decisión del usuario): Coinbase → Kraken → Binance.
-Binance/OKX/Bybit solo si el usuario los elige a mano, con aviso para residentes de EE.UU.
+Orden automático (decisión del usuario): Coinbase → Kraken → Binance (último recurso, con aviso en la gráfica).
+OKX/Bybit solo si el usuario los elige a mano, con aviso para residentes de EE.UU.
 
 ## Licencias de desarrollo con excepción
 
@@ -33,10 +33,9 @@ y se muestra en la página Créditos.
 
 ## Decisiones y limitaciones (cierre)
 
-- **Orden automático**: Coinbase → Kraken. La instrucción del usuario listaba también Binance en el orden pero lo
-  marcaba como solo-manual; se resolvió dejando Binance/OKX/Bybit **fuera** del modo automático (solo si el usuario
-  los elige), con aviso para residentes de EE.UU. Si un par no existe ni en Coinbase ni en Kraken, el usuario debe
-  elegir otro exchange a mano.
+- **Orden automático**: Coinbase → Kraken → Binance (decisión del usuario). Binance es el último recurso y la gráfica muestra un
+  aviso de que no está disponible para residentes de EE.UU. cuando lo usa sin haber sido elegido. OKX y Bybit solo se usan si
+  el usuario los elige a mano (con aviso al elegirlos).
 - **Bybit**: implementado según la API V5 documentada pero **sin verificar en vivo** (403 desde la red de pruebas).
   Es manual-only; si falla, el respaldo automático pasa a Coinbase/Kraken.
 - **MEXC**: descartado (la respuesta REST no incluye `Access-Control-Allow-Origin`; el navegador bloquearía la lectura).

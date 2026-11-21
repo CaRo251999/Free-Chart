@@ -1,19 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ExchangeError } from './types';
-import { ADAPTERS, AUTO_ORDER } from './registry';
+import { AUTO_ORDER } from './registry';
 import { candidateOrder, isDown, markDown, resetHealth, withFallback } from './router';
 
 beforeEach(() => resetHealth());
 
 describe('automatic order', () => {
-  it('never includes US-restricted exchanges', () => {
-    expect(AUTO_ORDER).toEqual(['coinbase', 'kraken']);
-    for (const id of AUTO_ORDER) expect(ADAPTERS[id].usRestricted).toBe(false);
+  it('is Coinbase -> Kraken -> Binance and never includes OKX/Bybit', () => {
+    expect(AUTO_ORDER).toEqual(['coinbase', 'kraken', 'binance']);
+    expect(AUTO_ORDER).not.toContain('okx');
+    expect(AUTO_ORDER).not.toContain('bybit');
   });
   it('puts a manual choice first, then the automatic chain', () => {
     expect(candidateOrder('binance')).toEqual(['binance', 'coinbase', 'kraken']);
-    expect(candidateOrder('kraken')).toEqual(['kraken', 'coinbase']);
-    expect(candidateOrder('auto')).toEqual(['coinbase', 'kraken']);
+    expect(candidateOrder('okx')).toEqual(['okx', 'coinbase', 'kraken', 'binance']);
+    expect(candidateOrder('kraken')).toEqual(['kraken', 'coinbase', 'binance']);
+    expect(candidateOrder('auto')).toEqual(['coinbase', 'kraken', 'binance']);
   });
 });
 
