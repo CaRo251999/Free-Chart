@@ -70,6 +70,8 @@ export class ChartController {
   private compareSeries: ISeriesApi<'Line'> | null = null;
   private compareUnsub: (() => void) | null = null;
   private compareToken = 0;
+  /** Exchange/symbol the current candles came from; set atomically with them so paging never mixes pairs. */
+  private source: { exchange: ExchangeId; symbol: string } | null = null;
   private mainListeners = new Set<(s: ISeriesApi<SeriesType>) => void>();
 
   constructor(
@@ -218,12 +220,14 @@ export class ChartController {
     this.pair = pair;
     this.interval = interval;
     this.exhausted = false;
+    this.source = null;
     this.candles = [];
     this.setStatus({ loading: true, error: undefined, fellBack: false, stream: 'connecting', last: undefined });
     try {
       const res = await fetchHistory(pair, interval, pref, { limit: 500 });
       if (token !== this.token) return;
       this.candles = res.data;
+      this.source = { exchange: res.exchange, symbol: res.symbol };
       this.renderAll();
       this.chart.timeScale().fitContent();
       this.chart.timeScale().scrollToPosition(6, false);
@@ -254,13 +258,14 @@ export class ChartController {
 
   async loadMore() {
     const first = this.candles[0];
-    if (this.loadingMore || this.exhausted || !first || !this.pair || !this.status.exchange) return;
+    const src = this.source;
+    if (this.loadingMore || this.exhausted || !first || !this.pair || !src) return;
     this.loadingMore = true;
     const token = this.token;
     try {
-      const adapter = ADAPTERS[this.status.exchange];
-      const older = await cachedCandles(adapter, this.status.symbol as string, this.interval, { limit: 500, before: first.time });
-      if (token !== this.token) return;
+      const adapter = ADAPTERS[src.exchange];
+      const older = await cachedCandles(adapter, src.symbol, this.interval, { limit: 500, before: first.time });
+      if (token !== this.token || this.source !== src) return;
       if (!older.length) {
         this.exhausted = true;
       } else {

@@ -1,0 +1,8 @@
+# Cloudflare Pages / Netlify headers (same policy as vercel.json)
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; connect-src 'self' https://api.exchange.coinbase.com wss://ws-feed.exchange.coinbase.com https://api.kraken.com wss://ws.kraken.com https://data-api.binance.vision wss://data-stream.binance.vision https://www.okx.com wss://ws.okx.com wss://ws.okx.com:8443 https://api.bybit.com wss://stream.bybit.com
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+/sw.js
+  Cache-Control: no-cache

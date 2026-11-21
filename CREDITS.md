@@ -27,7 +27,7 @@ El logo de atribución de la gráfica permanece visible (`attributionLogo`).
 
 Vite (MIT), @preact/preset-vite (MIT), vite-plugin-pwa (MIT) + Workbox (MIT), TypeScript (Apache-2.0),
 Vitest (MIT), jsdom (MIT), fake-indexeddb (Apache-2.0), ESLint (MIT), typescript-eslint (MIT),
-globals (MIT), license-checker-rseidelsohn (BSD-3-Clause).
+globals (MIT), @types/node (MIT), license-checker-rseidelsohn (BSD-3-Clause).
 
 Excepciones de desarrollo documentadas en NOTES.md (lightningcss MPL-2.0, spdx-exceptions CC-BY-3.0).
 Ejecuta `npm run licenses` para auditar el árbol completo.

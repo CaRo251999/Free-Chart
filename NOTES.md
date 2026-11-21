@@ -30,3 +30,33 @@ Excepciones SOLO de desarrollo (no se empaquetan en el sitio):
 
 El paquete npm no incluye NOTICE; se copió desde el repositorio oficial a `public/NOTICE-lightweight-charts.txt`
 y se muestra en la página Créditos.
+
+## Decisiones y limitaciones (cierre)
+
+- **Orden automático**: Coinbase → Kraken. La instrucción del usuario listaba también Binance en el orden pero lo
+  marcaba como solo-manual; se resolvió dejando Binance/OKX/Bybit **fuera** del modo automático (solo si el usuario
+  los elige), con aviso para residentes de EE.UU. Si un par no existe ni en Coinbase ni en Kraken, el usuario debe
+  elegir otro exchange a mano.
+- **Bybit**: implementado según la API V5 documentada pero **sin verificar en vivo** (403 desde la red de pruebas).
+  Es manual-only; si falla, el respaldo automático pasa a Coinbase/Kraken.
+- **MEXC**: descartado (la respuesta REST no incluye `Access-Control-Allow-Origin`; el navegador bloquearía la lectura).
+- **Geobloqueo desde EE.UU.** no se pudo probar desde la red de desarrollo; se documenta según términos de cada exchange.
+- **Kraken**: `changePct` usa la apertura del día UTC (la API no da apertura móvil de 24h). Historial limitado a 720 velas.
+- **Coinbase / Kraken**: 4h y 1S se construyen agregando velas de 1h / 1D (1S alineada al lunes UTC).
+- **Ichimoku**: se dibujan las 5 líneas (Span A/B proyectadas hacia el futuro, Chikou hacia atrás) pero **sin relleno de la
+  nube** (lightweight-charts no rellena entre series sin un primitive dedicado).
+- **Eje horario**: el eje de tiempo se muestra en hora local del usuario.
+- **Alertas**: solo con la pestaña abierta (sin servidor no hay push). Se explica en la UI. Las notificaciones del
+  navegador requieren permiso; si se deniega, se usan sonido y aviso en pantalla.
+- **Captura PNG**: añade franja con título y pie con la atribución de Lightweight Charts™.
+- **Pruebas en vivo**: 36 pruebas contra los exchanges (`LIVE=1 npx vitest run src/exchanges/live.test.ts`) pasaron el
+  2026-11-21 (velas 1m/1h/4h/1d/1w, ticker, símbolos, paginación hacia atrás y WebSocket en Coinbase, Kraken, Binance y OKX).
+- **Verificación visual**: hecha con Chrome headless (CDP) sobre la compilación de producción: gráfica, listas,
+  indicadores, las 12 herramientas de dibujo (ratón y táctil), 4 gráficas, comparar, alertas, respaldo y captura.
+  La CSP de `vercel.json` se validó sin violaciones.
+- **Bugs encontrados y corregidos durante la verificación**: (1) un clic simple se interpretaba como arrastre al
+  dibujar (sobre todo en táctil); (2) al cambiar de par, el paginado hacia atrás usaba el exchange/símbolo del par
+  anterior y mezclaba velas; (3) la barra de herramientas se desbordaba a 1280 px y recortaba el menú «Más».
+- **No verificado**: despliegue real en Vercel/Cloudflare/GitHub Pages (solo se validó localmente la CSP y la
+  compilación); notificaciones del navegador (el permiso no se puede conceder en Chrome headless; sonido y aviso
+  en pantalla sí); navegadores distintos de Chrome.
