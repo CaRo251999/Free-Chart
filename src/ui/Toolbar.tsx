@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { chartType, interval, pair, preferenceFor, selectPair, setPreference, theme, type ChartType } from '../state';
+import { chartType, interval, pair, preferenceFor, selectPair, setPreference, sidebarOpen, theme, type ChartType } from '../state';
 import { lang, setLang, t } from '../i18n';
 import { INTERVALS } from '../exchanges/intervals';
 import { ADAPTERS, ALL_IDS, type Preference } from '../exchanges/registry';
@@ -92,6 +92,7 @@ export function Toolbar() {
       </select>
       <ExchangePicker />
       <span class="spacer" />
+      <button class="btn icon" aria-label={t('watchlist')} title={t('watchlist')} aria-pressed={sidebarOpen.value} onClick={() => (sidebarOpen.value = !sidebarOpen.value)}>☰</button>
       <button class="btn icon" aria-label={t('theme')} title={t('theme')} onClick={() => (theme.value = theme.value === 'dark' ? 'light' : 'dark')}>
         {theme.value === 'dark' ? '☾' : '☀'}
       </button>

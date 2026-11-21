@@ -58,13 +58,13 @@ indicadores, SIN límites artificiales. Costo de operación: $0.
 - [x] Tema oscuro (por defecto) y claro.
 
 ### Fase 2 – Watchlists sin límites
-- [ ] Listas ilimitadas, con activos ilimitados por lista.
-- [ ] Buscador de pares en todos los exchanges.
-- [ ] Columnas: precio, % 24h, volumen 24h, ordenables.
-- [ ] Banderas de colores (7 colores) y notas por activo.
-- [ ] Arrastrar para reordenar.
-- [ ] Importar/exportar listas en JSON y CSV.
-- [ ] Compartir lista por link (estado codificado en la URL, sin servidor).
+- [x] Listas ilimitadas, con activos ilimitados por lista.
+- [x] Buscador de pares en todos los exchanges.
+- [x] Columnas: precio, % 24h, volumen 24h, ordenables.
+- [x] Banderas de colores (7 colores) y notas por activo.
+- [x] Arrastrar para reordenar.
+- [x] Importar/exportar listas en JSON y CSV.
+- [x] Compartir lista por link (estado codificado en la URL, sin servidor).
 
 ### Fase 3 – Indicadores (ilimitados por gráfica)
 - [ ] En el gráfico: SMA, EMA, WMA, VWAP, Bandas de Bollinger,

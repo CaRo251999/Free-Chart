@@ -1,7 +1,10 @@
-import { pair, route } from './state';
+import { pair, route, sidebarOpen } from './state';
 import { lang, t } from './i18n';
 import { Toolbar } from './ui/Toolbar';
 import { ChartView } from './ui/ChartView';
+import { WatchlistPanel } from './ui/WatchlistPanel';
+import { ShareImport } from './ui/ShareImport';
+import { Toasts } from './ui/toast';
 import { Credits, Privacy, Terms } from './pages/Legal';
 
 function Footer() {
@@ -26,12 +29,17 @@ export function App() {
       <Toolbar />
       <main class="main">
         {page ?? (
-          <div class="workspace">
-            <ChartView pair={pair.value} />
+          <div class={`workspace${sidebarOpen.value ? ' with-sidebar' : ''}`}>
+            <div class="chart-area">
+              <ChartView pair={pair.value} />
+            </div>
+            {sidebarOpen.value && <WatchlistPanel />}
           </div>
         )}
       </main>
       <Footer />
+      <ShareImport />
+      <Toasts />
     </div>
   );
 }
