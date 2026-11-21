@@ -122,3 +122,17 @@ a { color: var(--accent); }
   .hide-narrow { display: none; }
   .wl-row { grid-template-columns: 16px minmax(70px, 1.3fr) 1fr 0.8fr auto; }
 }
+
+/* indicators */
+.grow { flex: 1; }
+.ind-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 16px; }
+.ind-grid h3 { margin: 4px 0 8px; font-size: 14px; }
+.ind-grid h4 { margin: 8px 0 4px; font-size: 12px; font-weight: 600; }
+.ind-add { display: flex; flex-wrap: wrap; gap: 6px; }
+.ind-card { border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 8px; }
+.ind-fields { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.ind-fields label { display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
+.num-in { width: 72px; }
+.color-in { width: 44px; height: 30px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; }
+.tpl-list { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 700px) { .ind-grid { grid-template-columns: 1fr; } }

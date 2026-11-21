@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { ChartController, type ChartStatus } from '../chart/controller';
+import { IndicatorManager } from '../chart/indicatorManager';
+import { indicators } from '../indicators/state';
 import { chartType, interval, theme, preferenceFor } from '../state';
 import { lang, t } from '../i18n';
 import type { Pair } from '../exchanges/symbols';
@@ -19,6 +21,7 @@ interface Props {
 export function ChartView({ pair, pref, onController, onStatus, compact }: Props) {
   const el = useRef<HTMLDivElement>(null);
   const ctl = useRef<ChartController | null>(null);
+  const ind = useRef<IndicatorManager | null>(null);
   const [status, setStatus] = useState<ChartStatus>({ loading: true, fellBack: false, stream: 'connecting' });
 
   useEffect(() => {
@@ -32,9 +35,13 @@ export function ChartView({ pair, pref, onController, onStatus, compact }: Props
     });
     c.setType(chartType.peek());
     ctl.current = c;
+    ind.current = new IndicatorManager(c);
+    ind.current.sync(indicators.peek());
     onController?.(c);
     return () => {
       onController?.(null);
+      ind.current?.destroy();
+      ind.current = null;
       c.destroy();
       ctl.current = null;
     };
@@ -46,6 +53,7 @@ export function ChartView({ pair, pref, onController, onStatus, compact }: Props
     void ctl.current?.load(pair, interval.value, effectivePref);
   }, [key, interval.value, effectivePref]);
 
+  useEffect(() => ind.current?.sync(indicators.value), [indicators.value]);
   useEffect(() => ctl.current?.setType(chartType.value), [chartType.value]);
   useEffect(() => ctl.current?.setTheme(theme.value), [theme.value]);
   useEffect(() => ctl.current?.setLocale(lang.value), [lang.value]);

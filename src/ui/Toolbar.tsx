@@ -5,6 +5,8 @@ import { INTERVALS } from '../exchanges/intervals';
 import { ADAPTERS, ALL_IDS, type Preference } from '../exchanges/registry';
 import { pairKey } from '../exchanges/symbols';
 import { SymbolSearch } from './SymbolSearch';
+import { IndicatorPanel } from './IndicatorPanel';
+import { indicators } from '../indicators/state';
 import { Modal } from './Modal';
 import { load, save } from '../data/storage';
 import type { ExchangeId } from '../exchanges/types';
@@ -68,6 +70,7 @@ export function ExchangePicker({ compact }: { compact?: boolean }) {
 
 export function Toolbar() {
   const [searching, setSearching] = useState(false);
+  const [indOpen, setIndOpen] = useState(false);
   const labels = lang.value === 'en' ? LABEL_EN : LABEL;
   return (
     <header class="toolbar">
@@ -90,6 +93,7 @@ export function Toolbar() {
           <option key={k} value={k}>{t(k === 'heikin' ? 'heikin' : k)}</option>
         ))}
       </select>
+      <button class="btn" onClick={() => setIndOpen(true)} aria-label={t('indicators')}>ƒx {t('indicators')}{indicators.value.length ? ` (${indicators.value.length})` : ''}</button>
       <ExchangePicker />
       <span class="spacer" />
       <button class="btn icon" aria-label={t('watchlist')} title={t('watchlist')} aria-pressed={sidebarOpen.value} onClick={() => (sidebarOpen.value = !sidebarOpen.value)}>☰</button>
@@ -99,6 +103,7 @@ export function Toolbar() {
       <button class="btn" aria-label={t('language')} onClick={() => setLang(lang.value === 'es' ? 'en' : 'es')}>
         {lang.value === 'es' ? 'EN' : 'ES'}
       </button>
+      {indOpen && <IndicatorPanel onClose={() => setIndOpen(false)} />}
       {searching && <SymbolSearch onClose={() => setSearching(false)} onPick={(p) => selectPair(p)} />}
     </header>
   );

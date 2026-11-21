@@ -67,12 +67,12 @@ indicadores, SIN límites artificiales. Costo de operación: $0.
 - [x] Compartir lista por link (estado codificado en la URL, sin servidor).
 
 ### Fase 3 – Indicadores (ilimitados por gráfica)
-- [ ] En el gráfico: SMA, EMA, WMA, VWAP, Bandas de Bollinger,
+- [x] En el gráfico: SMA, EMA, WMA, VWAP, Bandas de Bollinger,
       Ichimoku, Supertrend, Parabolic SAR.
-- [ ] En panel inferior: RSI, MACD, Stoch RSI, ATR, OBV, ADX, Volumen.
-- [ ] Parámetros editables (períodos, colores, grosor).
-- [ ] Plantillas de indicadores guardables.
-- [ ] Implementa los cálculos tú mismo en /src/indicators con pruebas
+- [x] En panel inferior: RSI, MACD, Stoch RSI, ATR, OBV, ADX, Volumen.
+- [x] Parámetros editables (períodos, colores, grosor).
+- [x] Plantillas de indicadores guardables.
+- [x] Implementa los cálculos tú mismo en /src/indicators con pruebas
       unitarias contra valores conocidos.
 
 ### Fase 4 – Herramientas de dibujo
