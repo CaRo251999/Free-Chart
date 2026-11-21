@@ -1,19 +1,24 @@
 import { useState } from 'preact/hooks';
-import { chartType, interval, pair, preferenceFor, selectPair, setPreference, sidebarOpen, theme, type ChartType } from '../state';
+import { chartType, comparePair, interval, layout, pair, preferenceFor, selectPair, setPreference, sidebarOpen, theme, type ChartType, type LayoutKind } from '../state';
 import { lang, setLang, t } from '../i18n';
 import { INTERVALS } from '../exchanges/intervals';
 import { ADAPTERS, ALL_IDS, type Preference } from '../exchanges/registry';
 import { pairKey } from '../exchanges/symbols';
 import { SymbolSearch } from './SymbolSearch';
 import { IndicatorPanel } from './IndicatorPanel';
-import { indicators } from '../indicators/state';
+import { AlertsPanel, BackupPanel, HelpPanel } from './ExtraPanels';
 import { Modal } from './Modal';
+import { modal } from './uiState';
+import { takeScreenshot } from './screenshotAction';
+import { indicators } from '../indicators/state';
+import { activeAlertCount } from '../alerts/store';
 import { load, save } from '../data/storage';
 import type { ExchangeId } from '../exchanges/types';
 
 const LABEL: Record<string, string> = { '1m': '1m', '5m': '5m', '15m': '15m', '1h': '1h', '4h': '4h', '1d': '1D', '1w': '1S' };
 const LABEL_EN: Record<string, string> = { ...LABEL, '1w': '1W' };
 const TYPES: ChartType[] = ['candles', 'line', 'area', 'heikin'];
+const LAYOUTS: [LayoutKind, string][] = [[1, '▢'], [2, '◫'], [4, '⊞']];
 
 export function ExchangePicker({ compact }: { compact?: boolean }) {
   const [warn, setWarn] = useState<ExchangeId | null>(null);
@@ -68,17 +73,38 @@ export function ExchangePicker({ compact }: { compact?: boolean }) {
   );
 }
 
+function MoreMenu() {
+  const [open, setOpen] = useState(false);
+  const item = (label: string, fn: () => void) => (
+    <button class="btn" role="menuitem" onClick={() => { setOpen(false); fn(); }}>{label}</button>
+  );
+  return (
+    <div class="more">
+      <button class="btn icon" aria-haspopup="menu" aria-expanded={open} aria-label={t('more')} title={t('more')} onClick={() => setOpen(!open)}>⋯</button>
+      {open && (
+        <div class="more-menu" role="menu">
+          {item(`📷 ${t('screenshot')}`, () => void takeScreenshot())}
+          {item(`💾 ${t('backup')}`, () => (modal.value = 'backup'))}
+          {item(`⌨ ${t('shortcuts')}`, () => (modal.value = 'help'))}
+          <a class="btn" role="menuitem" href="#/credits" onClick={() => setOpen(false)}>{t('credits')}</a>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Toolbar() {
-  const [searching, setSearching] = useState(false);
-  const [indOpen, setIndOpen] = useState(false);
   const labels = lang.value === 'en' ? LABEL_EN : LABEL;
+  const m = modal.value;
+  const close = () => (modal.value = null);
+  const cmp = comparePair.value;
   return (
     <header class="toolbar">
       <a class="brand" href="#/" aria-label={t('appName')}>
         <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" width="24" height="24" />
         <span>{t('appName')}</span>
       </a>
-      <button class="btn pair-btn" onClick={() => setSearching(true)} aria-label={t('search')}>
+      <button class="btn pair-btn" onClick={() => (modal.value = 'search')} aria-label={t('search')}>
         🔍 {pairKey(pair.value)}
       </button>
       <div class="seg" role="group" aria-label="Timeframe">
@@ -90,12 +116,23 @@ export function Toolbar() {
       </div>
       <select class="select" aria-label={t('chartType')} value={chartType.value} onChange={(e) => (chartType.value = (e.target as HTMLSelectElement).value as ChartType)}>
         {TYPES.map((k) => (
-          <option key={k} value={k}>{t(k === 'heikin' ? 'heikin' : k)}</option>
+          <option key={k} value={k}>{t(k)}</option>
         ))}
       </select>
-      <button class="btn" onClick={() => setIndOpen(true)} aria-label={t('indicators')}>ƒx {t('indicators')}{indicators.value.length ? ` (${indicators.value.length})` : ''}</button>
+      <button class="btn" onClick={() => (modal.value = 'indicators')} aria-label={t('indicators')}>ƒx {t('indicators')}{indicators.value.length ? ` (${indicators.value.length})` : ''}</button>
       <ExchangePicker />
+      <button class={`btn${cmp ? ' active' : ''}`} onClick={() => (cmp ? (comparePair.value = null) : (modal.value = 'compare'))} title={cmp ? t('clearCompare') : t('compareHint')} aria-pressed={!!cmp}>
+        ⇆ {cmp ? `${cmp.base}/${cmp.quote} ✕` : t('compare')}
+      </button>
       <span class="spacer" />
+      <div class="seg" role="group" aria-label={t('layout')}>
+        {LAYOUTS.map(([n, icon]) => (
+          <button key={n} class={`btn seg-btn${layout.value === n ? ' active' : ''}`} aria-pressed={layout.value === n} aria-label={`${t('layout')} ${n}`} title={`${t('layout')} ${n}`} onClick={() => (layout.value = n)}>
+            {icon}
+          </button>
+        ))}
+      </div>
+      <button class="btn" onClick={() => (modal.value = 'alerts')} aria-label={t('alerts')} title={t('alerts')}>🔔{activeAlertCount() ? ` ${activeAlertCount()}` : ''}</button>
       <button class="btn icon" aria-label={t('watchlist')} title={t('watchlist')} aria-pressed={sidebarOpen.value} onClick={() => (sidebarOpen.value = !sidebarOpen.value)}>☰</button>
       <button class="btn icon" aria-label={t('theme')} title={t('theme')} onClick={() => (theme.value = theme.value === 'dark' ? 'light' : 'dark')}>
         {theme.value === 'dark' ? '☾' : '☀'}
@@ -103,8 +140,13 @@ export function Toolbar() {
       <button class="btn" aria-label={t('language')} onClick={() => setLang(lang.value === 'es' ? 'en' : 'es')}>
         {lang.value === 'es' ? 'EN' : 'ES'}
       </button>
-      {indOpen && <IndicatorPanel onClose={() => setIndOpen(false)} />}
-      {searching && <SymbolSearch onClose={() => setSearching(false)} onPick={(p) => selectPair(p)} />}
+      <MoreMenu />
+      {m === 'indicators' && <IndicatorPanel onClose={close} />}
+      {m === 'search' && <SymbolSearch onClose={close} onPick={(p) => selectPair(p)} />}
+      {m === 'compare' && <SymbolSearch title={t('compare')} onClose={close} onPick={(p) => (comparePair.value = p)} />}
+      {m === 'alerts' && <AlertsPanel onClose={close} />}
+      {m === 'backup' && <BackupPanel onClose={close} />}
+      {m === 'help' && <HelpPanel onClose={close} />}
     </header>
   );
 }

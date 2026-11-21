@@ -5,6 +5,7 @@ import {
   CrosshairMode,
   HistogramSeries,
   LineSeries,
+  PriceScaleMode,
   TickMarkType,
   createChart,
   type IChartApi,
@@ -65,6 +66,10 @@ export class ChartController {
   private loadingMore = false;
   private exhausted = false;
   private dataListeners = new Set<(full: boolean) => void>();
+  private comparePair: Pair | null = null;
+  private compareSeries: ISeriesApi<'Line'> | null = null;
+  private compareUnsub: (() => void) | null = null;
+  private compareToken = 0;
   private mainListeners = new Set<(s: ISeriesApi<SeriesType>) => void>();
 
   constructor(
@@ -223,6 +228,7 @@ export class ChartController {
       this.chart.timeScale().fitContent();
       this.chart.timeScale().scrollToPosition(6, false);
       this.setStatus({ loading: false, exchange: res.exchange, symbol: res.symbol, servedPair: res.pair, fellBack: res.fellBack, last: res.data[res.data.length - 1] });
+      if (this.comparePair) void this.reloadCompare();
       this.unsubscribe = subscribeLive(
         res.exchange,
         res.symbol,
@@ -270,8 +276,46 @@ export class ChartController {
     }
   }
 
+  /** Overlays another pair as a percentage line (the price axis switches to % mode). */
+  async setCompare(pair: Pair | null) {
+    this.comparePair = pair;
+    await this.reloadCompare();
+  }
+
+  private clearCompare() {
+    this.compareUnsub?.();
+    this.compareUnsub = null;
+    if (this.compareSeries) this.chart.removeSeries(this.compareSeries);
+    this.compareSeries = null;
+  }
+
+  private async reloadCompare() {
+    this.clearCompare();
+    const pair = this.comparePair;
+    this.chart.priceScale('right').applyOptions({ mode: pair ? PriceScaleMode.Percentage : PriceScaleMode.Normal });
+    if (!pair) return;
+    const token = ++this.compareToken;
+    try {
+      const res = await fetchHistory(pair, this.interval, 'auto', { limit: 500 });
+      if (token !== this.compareToken) return;
+      const series = this.chart.addSeries(LineSeries, { color: '#f59e0b', lineWidth: 2, title: `${pair.base}/${pair.quote}`, priceLineVisible: false }, 0);
+      series.setData(res.data.map((k) => ({ time: t(k.time), value: k.close })));
+      let last = res.data[res.data.length - 1]?.time ?? 0;
+      this.compareSeries = series;
+      this.compareUnsub = subscribeLive(res.exchange, res.symbol, this.interval, (k) => {
+        if (k.time < last || !Number.isFinite(k.close)) return;
+        last = k.time;
+        series.update({ time: t(k.time), value: k.close });
+      });
+    } catch {
+      /* comparison unavailable: keep the chart usable */
+    }
+  }
+
   destroy() {
     this.token++;
+    this.compareToken++;
+    this.clearCompare();
     this.unsubscribe?.();
     this.dataListeners.clear();
     this.chart.remove();

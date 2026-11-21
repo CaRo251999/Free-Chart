@@ -87,14 +87,14 @@ indicadores, SIN límites artificiales. Costo de operación: $0.
       externo de dibujo, solo con licencia MIT/Apache y acreditado.
 
 ### Fase 5 – Extras
-- [ ] Layouts multi-gráfica: 1, 2, 4 gráficas con crosshair sincronizado.
-- [ ] Alertas de precio ilimitadas (notificación del navegador + sonido,
+- [x] Layouts multi-gráfica: 1, 2, 4 gráficas con crosshair sincronizado.
+- [x] Alertas de precio ilimitadas (notificación del navegador + sonido,
       funcionan con la pestaña abierta; explícalo en la UI).
-- [ ] Comparar símbolos (overlay en %).
-- [ ] Atajos de teclado.
-- [ ] Captura de la gráfica como imagen (PNG) para compartir.
-- [ ] Respaldo/restauración de TODO (listas, dibujos, ajustes) en un JSON.
-- [ ] Idiomas: español (por defecto) e inglés.
+- [x] Comparar símbolos (overlay en %).
+- [x] Atajos de teclado.
+- [x] Captura de la gráfica como imagen (PNG) para compartir.
+- [x] Respaldo/restauración de TODO (listas, dibujos, ajustes) en un JSON.
+- [x] Idiomas: español (por defecto) e inglés.
 
 ## Calidad
 - Responsive: debe funcionar bien en celular (gestos táctiles para

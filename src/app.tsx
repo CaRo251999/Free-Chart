@@ -1,4 +1,7 @@
-import { pair, route, sidebarOpen } from './state';
+import { useEffect } from 'preact/hooks';
+import { extraPairs, layout, pair, route, sidebarOpen } from './state';
+import { installShortcuts } from './ui/shortcuts';
+import { startAlertEngine } from './alerts/engine';
 import { lang, t } from './i18n';
 import { Toolbar } from './ui/Toolbar';
 import { ChartView } from './ui/ChartView';
@@ -20,8 +23,29 @@ function Footer() {
   );
 }
 
+function Charts() {
+  const n = layout.value;
+  const extra = extraPairs.value;
+  return (
+    <div class={`charts n${n}`}>
+      <ChartView pair={pair.value} primary />
+      {Array.from({ length: n - 1 }, (_, i) => (
+        <ChartView key={i} slot={i} pair={extra[i] ?? pair.value} compact />
+      ))}
+    </div>
+  );
+}
+
 export function App() {
   void lang.value; // re-render everything on language change
+  useEffect(() => {
+    const offKeys = installShortcuts();
+    const offAlerts = startAlertEngine();
+    return () => {
+      offKeys();
+      offAlerts();
+    };
+  }, []);
   const r = route.value;
   const page = r === 'credits' ? <Credits /> : r === 'terms' ? <Terms /> : r === 'privacy' ? <Privacy /> : null;
   return (
@@ -31,7 +55,7 @@ export function App() {
         {page ?? (
           <div class={`workspace${sidebarOpen.value ? ' with-sidebar' : ''}`}>
             <div class="chart-area">
-              <ChartView pair={pair.value} primary />
+              <Charts />
             </div>
             {sidebarOpen.value && <WatchlistPanel />}
           </div>

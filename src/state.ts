@@ -23,6 +23,8 @@ export const extraPairs = signal<Pair[]>(load('extraPairs', [
   { base: 'SOL', quote: 'USD' },
   { base: 'XRP', quote: 'USD' },
 ]));
+/** Pair overlaid in % on the primary chart (session only). */
+export const comparePair = signal<Pair | null>(null);
 export const route = signal<string>(parseRoute());
 
 function parseRoute(): string {
