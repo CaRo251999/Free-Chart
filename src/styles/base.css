@@ -136,3 +136,17 @@ a { color: var(--accent); }
 .color-in { width: 44px; height: 30px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; }
 .tpl-list { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 6px; }
 @media (max-width: 700px) { .ind-grid { grid-template-columns: 1fr; } }
+
+/* drawing tools */
+.draw-toolbar { position: absolute; left: 6px; top: 46px; z-index: 6; display: flex; flex-direction: column; gap: 2px; padding: 3px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; max-height: calc(100% - 90px); overflow-y: auto; }
+.dt { width: 34px; height: 34px; border: 0; border-radius: 6px; background: none; color: var(--text); font-size: 16px; cursor: pointer; }
+.dt:hover:not(:disabled) { background: var(--panel-2); }
+.dt.active { background: var(--accent); color: var(--accent-ink); }
+.dt:disabled { opacity: 0.35; cursor: default; }
+.dt-sep { height: 1px; background: var(--border); margin: 3px 4px; }
+.draw-edit { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 8px; align-items: center; padding: 6px 8px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+@media (max-width: 800px) {
+  .draw-toolbar { flex-direction: row; top: auto; bottom: 30px; left: 6px; right: 6px; max-height: none; overflow-x: auto; overflow-y: hidden; }
+  .dt { flex: none; }
+  .draw-edit { top: auto; bottom: 76px; }
+}

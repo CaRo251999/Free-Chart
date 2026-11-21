@@ -65,6 +65,7 @@ export class ChartController {
   private loadingMore = false;
   private exhausted = false;
   private dataListeners = new Set<(full: boolean) => void>();
+  private mainListeners = new Set<(s: ISeriesApi<SeriesType>) => void>();
 
   constructor(
     el: HTMLElement,
@@ -128,6 +129,11 @@ export class ChartController {
           upColor: c.up, downColor: c.down, borderUpColor: c.up, borderDownColor: c.down, wickUpColor: c.up, wickDownColor: c.down,
         }, 0);
     }
+    this.notifyMain();
+  }
+
+  private notifyMain() {
+    if (this.main) for (const cb of this.mainListeners) cb(this.main);
   }
 
   private mainData(list: Candle[]) {
@@ -157,6 +163,13 @@ export class ChartController {
     if (tail) this.main?.update(tail as never);
     this.volume.update(this.volData(last));
     this.emitData(false);
+  }
+
+  /** Fires whenever the main price series is (re)created, so primitives can re-attach. */
+  onMainChange(cb: (s: ISeriesApi<SeriesType>) => void): () => void {
+    this.mainListeners.add(cb);
+    if (this.main) cb(this.main);
+    return () => this.mainListeners.delete(cb);
   }
 
   onData(cb: (full: boolean) => void): () => void {

@@ -76,14 +76,14 @@ indicadores, SIN límites artificiales. Costo de operación: $0.
       unitarias contra valores conocidos.
 
 ### Fase 4 – Herramientas de dibujo
-- [ ] Línea de tendencia, rayo, línea horizontal y vertical, canal
+- [x] Línea de tendencia, rayo, línea horizontal y vertical, canal
       paralelo, rectángulo, retroceso de Fibonacci, texto, flecha,
       regla de medición (% y precio), posición larga/corta (R:R).
-- [ ] Seleccionar, mover, editar color/grosor y borrar.
-- [ ] Imán a OHLC (on/off).
-- [ ] Dibujos guardados por símbolo en localStorage.
-- [ ] Deshacer/rehacer (Ctrl+Z / Ctrl+Y).
-- [ ] Usa los primitives de lightweight-charts v5. Si usas un plugin
+- [x] Seleccionar, mover, editar color/grosor y borrar.
+- [x] Imán a OHLC (on/off).
+- [x] Dibujos guardados por símbolo en localStorage.
+- [x] Deshacer/rehacer (Ctrl+Z / Ctrl+Y).
+- [x] Usa los primitives de lightweight-charts v5. Si usas un plugin
       externo de dibujo, solo con licencia MIT/Apache y acreditado.
 
 ### Fase 5 – Extras

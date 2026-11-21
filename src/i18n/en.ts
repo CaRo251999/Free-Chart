@@ -92,6 +92,7 @@ export const en: Dict = {
   redo: 'Redo',
   deleteDrawing: 'Delete drawing',
   clearDrawings: 'Clear all',
+  barsText: '{n} bars',
   textPrompt: 'Text:',
   layout: 'Layout',
   alerts: 'Alerts',

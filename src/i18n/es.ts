@@ -93,6 +93,7 @@ export const es = {
   redo: 'Rehacer',
   deleteDrawing: 'Borrar dibujo',
   clearDrawings: 'Borrar todos',
+  barsText: '{n} velas',
   textPrompt: 'Texto:',
   // Extras
   layout: 'Diseño',

@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { ChartController, type ChartStatus } from '../chart/controller';
 import { IndicatorManager } from '../chart/indicatorManager';
 import { indicators } from '../indicators/state';
-import { chartType, interval, theme, preferenceFor } from '../state';
+import { chartType, interval, theme, preferenceFor, magnet } from '../state';
+import { DrawingManager } from '../drawing/manager';
+import { drawingMgr, drawingUi } from '../drawing/state';
+import { DrawingToolbar } from './DrawingToolbar';
 import { lang, t } from '../i18n';
 import type { Pair } from '../exchanges/symbols';
 import { pairKey } from '../exchanges/symbols';
@@ -16,12 +19,15 @@ interface Props {
   onController?: (c: ChartController | null) => void;
   onStatus?: (s: ChartStatus) => void;
   compact?: boolean;
+  /** The primary chart owns the drawing toolbar and accepts drawing gestures. */
+  primary?: boolean;
 }
 
-export function ChartView({ pair, pref, onController, onStatus, compact }: Props) {
+export function ChartView({ pair, pref, onController, onStatus, compact, primary }: Props) {
   const el = useRef<HTMLDivElement>(null);
   const ctl = useRef<ChartController | null>(null);
   const ind = useRef<IndicatorManager | null>(null);
+  const draw = useRef<DrawingManager | null>(null);
   const [status, setStatus] = useState<ChartStatus>({ loading: true, fellBack: false, stream: 'connecting' });
 
   useEffect(() => {
@@ -37,9 +43,23 @@ export function ChartView({ pair, pref, onController, onStatus, compact }: Props
     ctl.current = c;
     ind.current = new IndicatorManager(c);
     ind.current.sync(indicators.peek());
+    const dm = new DrawingManager(c, el.current as HTMLElement, !primary);
+    draw.current = dm;
+    dm.setMagnet(magnet.peek());
+    if (primary) {
+      dm.onChange = (st) => (drawingUi.value = st);
+      drawingMgr.value = dm;
+    }
+    dm.setSymbol(pairKey(pair));
     onController?.(c);
     return () => {
       onController?.(null);
+      if (primary) {
+        drawingMgr.value = null;
+        drawingUi.value = { selected: null, canUndo: false, canRedo: false, count: 0, tool: 'cursor', draftHint: false };
+      }
+      draw.current?.destroy();
+      draw.current = null;
       ind.current?.destroy();
       ind.current = null;
       c.destroy();
@@ -53,6 +73,8 @@ export function ChartView({ pair, pref, onController, onStatus, compact }: Props
     void ctl.current?.load(pair, interval.value, effectivePref);
   }, [key, interval.value, effectivePref]);
 
+  useEffect(() => draw.current?.setSymbol(key), [key]);
+  useEffect(() => draw.current?.setMagnet(magnet.value), [magnet.value]);
   useEffect(() => ind.current?.sync(indicators.value), [indicators.value]);
   useEffect(() => ctl.current?.setType(chartType.value), [chartType.value]);
   useEffect(() => ctl.current?.setTheme(theme.value), [theme.value]);
@@ -72,6 +94,7 @@ export function ChartView({ pair, pref, onController, onStatus, compact }: Props
         {status.fellBack && status.exchange && <span class="chip chip-warn">{t('fellBack', { name: ADAPTERS[status.exchange].name })}</span>}
       </div>
       <div class="chart-canvas" ref={el} />
+      {primary && <DrawingToolbar />}
       {status.error && !status.loading && <div class="chart-msg">{t('noData')}</div>}
     </div>
   );

@@ -31,7 +31,7 @@ export function App() {
         {page ?? (
           <div class={`workspace${sidebarOpen.value ? ' with-sidebar' : ''}`}>
             <div class="chart-area">
-              <ChartView pair={pair.value} />
+              <ChartView pair={pair.value} primary />
             </div>
             {sidebarOpen.value && <WatchlistPanel />}
           </div>
